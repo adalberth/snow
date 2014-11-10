@@ -41,22 +41,13 @@ window.requestAnimFrame = (function(){
 
 		this.$el = $('<div />')
 					.addClass('snow')
-					.css({'position':'fixed'});
+					.css({
+						'position':'fixed',
+						'z-index': this.randomZindex(),
+						'opacity': this.randomOpacity()
+					});
 
 		this.opts.parent.$el.append(this.$el);
-
-		this.startX = this.opts.parent.edges().width * Math.random();
-		this.x = 0;
-		this.y = 0;
-		this.speed = Math.random() * 1 + 1;
-
-		this.wiggle = {
-			count: 0,
-			factor: Math.random() * 50 + 50,
-			speed: 0.01 + Math.random() / 1000
-		}
-
-		this.translate(this.startX, this.y);
 
 		this.init();
 	}
@@ -65,12 +56,28 @@ window.requestAnimFrame = (function(){
 		constructor: Snow,
 		init:function(){
 			this.setDimensions();
+			this.variables();
 		},
 		setDimensions:function(){
 			var dim = parseInt( (Math.random() * this.opts.dimension.max) + this.opts.dimension.min); 
 
 			this.$el.width(dim);
 			this.$el.height(dim);
+		},
+		variables:function(){
+			
+			this.startX = this.opts.parent.edges().width * Math.random();
+			this.x = 0;
+			this.y = (this.$el.height() * 2) * -1;
+			this.speed = Math.random() * 2 + 1;
+
+			this.wiggle = {
+				count: 0,
+				factor: Math.random() * 50 + 50,
+				speed: 0.01 + Math.random() / 1000
+			}
+
+			this.translate(this.startX, this.y);
 		},
 		render:function(){
 			this.animate();
@@ -93,7 +100,6 @@ window.requestAnimFrame = (function(){
 			// if(this.x > edges.width){
 			// 	this.x = 0;
 			// }else{	
-				
 			// }
 
 			this.x = (Math.sin(this.wiggle.count) * this.wiggle.factor) + this.startX;
@@ -104,6 +110,12 @@ window.requestAnimFrame = (function(){
 				this.y += this.speed;
 			}
 		},
+		randomZindex:function(){
+			return (Math.floor(Math.random() * 9) + 1).toString();
+		},
+		randomOpacity:function(){
+		  return ((Math.floor(Math.random() * (9 - 7)) + 7) / 9).toString();
+		}
 
 	};
 	
@@ -114,16 +126,20 @@ window.requestAnimFrame = (function(){
 	*/
 	function SnowStorm(options){
 		this.opts = $.extend(true, {}, {
-            dimension:{
-            	min:8,
-            	max:15
+            snow:{
+            	dimension:{
+	            	min:8,
+	            	max:15
+	            },
+	            parent: this
             },
-            parent: this
+            children:50
         }, options || {});
 
-		this.opts.dimension.max = this.opts.dimension.max - this.opts.dimension.min;
+		this.opts.snow.dimension.max = this.opts.snow.dimension.max - this.opts.snow.dimension.min;
 		
 		this.collection = [];
+		this.animationCollection = [];
 		this.$window = $(window);
 		this.init();
 	}
@@ -140,8 +156,8 @@ window.requestAnimFrame = (function(){
 			$('body').append(this.$el);
 		},
 		createSnow:function(){
-			for (var i = 0; i < 20; i++) {
-				this.collection.push(new Snow(this.opts));
+			for (var i = 0; i < this.opts.children; i++) {
+				this.collection.push(new Snow(this.opts.snow));
 			};		
 		},
 		edges:function(){
@@ -151,6 +167,15 @@ window.requestAnimFrame = (function(){
 			}
 		},
 		start:function(){
+
+			var that = this;
+			this.interval = setInterval(function(){
+				that.animationCollection.push(that.collection[that.animationCollection.length]);
+				if(that.animationCollection.length === that.collection.length){
+					clearInterval(that.interval);
+				}
+			},250);
+
 			this.render();
 		},
 		render:function(){
@@ -158,12 +183,12 @@ window.requestAnimFrame = (function(){
 			requestAnimFrame(function(){
 				that.render();
 			});
-			that.loop();	
+			that.loop();
 		},
 		loop:function(){
-			for (var i = 0; i < this.collection.length; i++) {
-				this.collection[i].render();
-			};
+			for (var i = 0; i < this.animationCollection.length; i++) {
+				this.animationCollection[i].render();
+			}; 
 		}
 	};
 	

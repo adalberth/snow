@@ -6,3 +6,15 @@ body{
 	background-color: #fff;
 	border-radius:100%;
 }
+
+.collider-back{
+	z-index: 0;
+}
+
+.collider-mid{
+	z-index: 5;
+}
+
+.collider-front{
+	z-index: 10;
+}
