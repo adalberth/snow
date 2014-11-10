@@ -36,7 +36,12 @@ window.requestAnimFrame = (function(){
 	*/
 	function Snow(options){
 		this.opts = $.extend(true, {}, {
-            transformPrefix: prefix.css + 'transform'
+            transformPrefix: prefix.css + 'transform',
+            wiggle:{
+				count: 0,
+				factor: Math.random() * 50 + 50,
+				speed: 0.01 + Math.random() / 1000
+			}
         }, options || {});
 
 		this.$el = $('<div />')
@@ -64,18 +69,19 @@ window.requestAnimFrame = (function(){
 			this.$el.width(dim);
 			this.$el.height(dim);
 		},
+		setStartPosition:function(){
+			this.startX = this.opts.parent.edges().width * Math.random();
+			this.y = (this.$el.height() * 3) * -1;
+		},
 		variables:function(){
 			
-			this.startX = this.opts.parent.edges().width * Math.random();
 			this.x = 0;
-			this.y = (this.$el.height() * 2) * -1;
+			this.y = 0;
 			this.speed = Math.random() * 2 + 1;
 
-			this.wiggle = {
-				count: 0,
-				factor: Math.random() * 50 + 50,
-				speed: 0.01 + Math.random() / 1000
-			}
+			this.wiggle = this.opts.wiggle;
+
+			this.setStartPosition();
 
 			this.translate(this.startX, this.y);
 		},
@@ -105,7 +111,7 @@ window.requestAnimFrame = (function(){
 			this.x = (Math.sin(this.wiggle.count) * this.wiggle.factor) + this.startX;
 
 			if(this.y > edges.height){
-				this.y = (this.$el.height() * 2) * -1;
+				this.setStartPosition();
 			}else{
 				this.y += this.speed;
 			}
@@ -114,7 +120,9 @@ window.requestAnimFrame = (function(){
 			return (Math.floor(Math.random() * 9) + 1).toString();
 		},
 		randomOpacity:function(){
-		  return ((Math.floor(Math.random() * (9 - 7)) + 7) / 9).toString();
+			var min = 6,
+				max = 9;
+		  return ((Math.floor(Math.random() * (max - min)) + min) / 10).toString();
 		}
 
 	};
@@ -128,8 +136,8 @@ window.requestAnimFrame = (function(){
 		this.opts = $.extend(true, {}, {
             snow:{
             	dimension:{
-	            	min:8,
-	            	max:15
+	            	min:5,
+	            	max:10
 	            },
 	            parent: this
             },
