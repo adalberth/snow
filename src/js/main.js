@@ -174,7 +174,7 @@ window.requestAnimFrame = (function(){
 				height:this.$window.height(),
 			}
 		},
-		start:function(){
+		start:function(){ 
 
 			var that = this;
 			this.interval = setInterval(function(){
