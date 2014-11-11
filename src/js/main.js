@@ -10,7 +10,10 @@ window.requestAnimFrame = (function(){
           };
 })();
 
-(function($){
+(function($,p5){
+
+	
+
 
 	/*
 	* Prefix
@@ -74,7 +77,6 @@ window.requestAnimFrame = (function(){
 			this.y = (this.$el.height() * 3) * -1;
 		},
 		variables:function(){
-			
 			this.x = 0;
 			this.y = 0;
 			this.speed = Math.random() * 2 + 1;
@@ -205,7 +207,7 @@ window.requestAnimFrame = (function(){
 	$(document).ready(function(){
 		var snowStorm = new SnowStorm();	
 	});
-}(jQuery))
+}(jQuery, p5))
 
 
 
