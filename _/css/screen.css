@@ -3,7 +3,16 @@ body {
 }
 
 .snow {
+  position: relative;
+}
+.snow:before {
+  content: "";
+  height: 100%;
+  width: 100%;
+  position: absolute;
   background-color: #fff;
+  top: -180%;
+  left: -50%;
   border-radius: 100%;
 }
 
