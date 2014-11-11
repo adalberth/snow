@@ -2,17 +2,33 @@ body{
 	background-color: darkBlue; 
 } 
 
-.snow{
-	&:before{
-		content:"";
-		height: 100%;
-		width: 100%;
-		position: absolute;
-		background-color: #fff;
-		top:-180%;
-		left:-50%;
-		border-radius:100%;
+@keyframes spin{
+	from{
+		transform:rotate(0deg);
 	}
+
+	to{
+		transform:rotate(360deg);
+	}
+}
+
+.snow{
+	&.falling{
+		.snow-graphic{
+			animation:spin 5s infinite;
+		}
+	}
+}
+
+.snow-graphic{
+	content:"";
+	height: 100%;
+	width: 100%;
+	position: absolute;
+	background-color: #fff;
+	top:-180%;
+	left:-50%;
+	border-radius:60%;
 }
 
 .collider-back{

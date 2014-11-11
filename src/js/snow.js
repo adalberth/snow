@@ -45,11 +45,16 @@ window.requestAnimFrame = (function(){
         }, options || {});
 
 		this.$el = $('<div />')
-					.addClass('snow')
+					.addClass('snow falling')
 					.css({
 						'position':'fixed', 
 						'opacity': this.randomOpacity()
 					});
+
+		var graphic = $('<div />')
+					.addClass('snow-graphic');
+
+		this.$el.append(graphic);
 
 		this.opts.parent.$el.append(this.$el);
 
@@ -64,14 +69,14 @@ window.requestAnimFrame = (function(){
 			this.variables();
 		},
 		setDimensions:function(){
-			var dim = parseInt( (Math.random() * this.opts.dimension.max) + this.opts.dimension.min); 
-
+			var dim = this.randomDimension();
+				diff = dim > this.opts.dimension.min + 1 ? parseInt(Math.random() * 2) : 0;
 			this.$el.width(dim);
-			this.$el.height(dim);
+			this.$el.height(dim - diff);
 		},
 		setStartPosition:function(){
 			this.startX = this.opts.parent.edges().width * Math.random();
-			this.y = (this.$el.height() * 3) * -1;
+			this.y = this.heightOffset * -1;
 			this.setZindex();
 			this.setSpeed();
 		},
@@ -88,6 +93,7 @@ window.requestAnimFrame = (function(){
 			this.x = 0;
 			this.y = 0;
 			this.wiggle = this.opts.wiggle;
+			this.heightOffset = (this.$el.height() * 3);
 
 			this.setStartPosition();
 
@@ -101,7 +107,13 @@ window.requestAnimFrame = (function(){
 		animate:function(){
 			this.translate(this.x,this.y); 
 		},
+		start:function(){
+			this.$el.addClass('falling');
+			this.$el.removeClass('stopped');
+		},	
 		stop:function(){
+			this.$el.removeClass('falling');
+			this.$el.addClass('stopped');
 			this.opts.parent.removeFromAnimation(this);
 		}, 
 		translate:function(x,y){
@@ -122,11 +134,14 @@ window.requestAnimFrame = (function(){
 			this.wiggle.count += this.wiggle.speed;
 			this.x = (Math.sin(this.wiggle.count) * this.wiggle.factor) + this.startX;
 
-			if(this.y > edges.height){
+			if(this.y > (edges.height + this.heightOffset)){
 				this.setStartPosition();
 			}else{
 				this.y += this.speed;
 			}
+		},
+		randomDimension: function(){
+			return parseInt( (Math.random() * this.opts.dimension.max) + this.opts.dimension.min);
 		},
 		randomZindex:function(){
 			return (Math.floor(Math.random() * 9) + 1).toString();
@@ -167,6 +182,7 @@ window.requestAnimFrame = (function(){
 		},
 		shake:function(){
 			for (var i = 0; i < this.touchCollection.length; i++) {
+				this.touchCollection[i].start();
 				this.opts.parent.addToAnimation(this.touchCollection[i]);
 			};
 			this.touchCollection = [];
