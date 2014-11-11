@@ -41,7 +41,7 @@ gulp.task('lint', function () {
 gulp.task('js', function () {
 	'use strict';
 	gulp.src([settings.source + '/js/**/*.js'])
-		.pipe(uglify('main.min.js', {
+		.pipe(uglify('snow.min.js', {
 			outSourceMap: true
 		}))
 		.on('error', gutil.log)

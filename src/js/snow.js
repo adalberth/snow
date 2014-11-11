@@ -99,11 +99,11 @@ window.requestAnimFrame = (function(){
 			this.edge();
 		},
 		animate:function(){
-			this.translate(this.x,this.y);
+			this.translate(this.x,this.y); 
 		},
 		stop:function(){
 			this.opts.parent.removeFromAnimation(this);
-		},
+		}, 
 		translate:function(x,y){
 			var transform = this.opts.transformPrefix;
 			this.$el.css({
@@ -111,25 +111,15 @@ window.requestAnimFrame = (function(){
 			})
 		},
 		touch:function(){
-			// if(Math.random() < 0.8){
-			// 	return;
-			// }
-
 			for (var i = 0; i < this.opts.parent.colliderCollection.length; i++) {
 				var touch = this.opts.parent.colliderCollection[i].touch(this);
 				if(touch) this.stop();
 			};
 		},
-		edge:function(){
+		edge:function(){ 
 			var edges = this.opts.parent.edges();
 			
 			this.wiggle.count += this.wiggle.speed;
-
-			// if(this.x > edges.width){
-			// 	this.x = 0;
-			// }else{	
-			// }
-
 			this.x = (Math.sin(this.wiggle.count) * this.wiggle.factor) + this.startX;
 
 			if(this.y > edges.height){
