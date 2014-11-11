@@ -165,7 +165,7 @@ window.requestAnimFrame = (function(){
 
         this.el = this.opts.el;
         this.$el = $(this.el);
-        this.zIndex = this.$el.css('z-index');
+        this.zIndex = this.$el.css('z-index') === 'auto' ? 0 : this.$el.css('z-index');
         this.body = this.getBody();
         this.touchCollection = [];
 
@@ -188,12 +188,12 @@ window.requestAnimFrame = (function(){
 			this.touchCollection = [];
 		},
 		getBody:function(){
-			var top = this.$el.position().top - this.opts.parent.edges().scroll;
+			var top = this.$el.offset().top - this.opts.parent.edges().scroll;
 			return {
 		        top: top,
-		        right: this.$el.position().left + this.$el.width() - 10,
+		        right: this.$el.offset().left + this.$el.width() - 10,
 		        bottom: top + 1, //this.$el.height(),
-		        left: this.$el.position().left,
+		        left: this.$el.offset().left,
 	        };
 		},
 		setBody:function(){
@@ -345,7 +345,7 @@ window.requestAnimFrame = (function(){
 		}
 	};
 	
-	window.SnowStorm = SnowStorm;
+	window.SnowStorm = SnowStorm; 
 
 	$(document).ready(function(){
 		var snowStorm = new SnowStorm();	
