@@ -47,7 +47,7 @@ window.requestAnimFrame = (function(){
 		this.$el = $('<div />')
 					.addClass('snow')
 					.css({
-						'position':'fixed',
+						'position':'fixed', 
 						'opacity': this.randomOpacity()
 					});
 
@@ -160,7 +160,7 @@ window.requestAnimFrame = (function(){
 	SnowCollider.prototype = { 
 		constructor: SnowCollider,
 		init:function(){
-			this.bind();
+			//this.bind();
 		},
 		bind:function(){
 			this.$el.on('click',$.proxy(this.shake,this));
@@ -172,14 +172,19 @@ window.requestAnimFrame = (function(){
 			this.touchCollection = [];
 		},
 		getBody:function(){
+			var top = this.$el.position().top - this.opts.parent.edges().scroll;
 			return {
-		        top: this.$el.position().top,
+		        top: top,
 		        right: this.$el.position().left + this.$el.width(),
-		        bottom: this.$el.position().top + 1, //this.$el.height(),
+		        bottom: top + 1, //this.$el.height(),
 		        left: this.$el.position().left,
 	        };
 		},
+		setBody:function(){
+			this.body = this.getBody();
+		},
 		touch:function(el){
+
 			if(el.y > this.body.top 
 			&& el.y < this.body.bottom
 			&& el.x > this.body.left
@@ -220,6 +225,7 @@ window.requestAnimFrame = (function(){
 		this.colliderCollection = [];
 		this.animationCollection = [];
 		this.$window = $(window);
+		this.$hmtlbody = $('html,body');
 
 		this.canremove = false;
 		this.init();
@@ -231,6 +237,7 @@ window.requestAnimFrame = (function(){
 			this.createParent();
 			this.createSnow();
 			this.createCollider();
+			this.bind();
 			this.start();
 		},
 		createParent:function(){
@@ -248,6 +255,18 @@ window.requestAnimFrame = (function(){
 				that.colliderCollection.push(new SnowCollider({el:el,parent:that}));
 			});
 		},
+		bind:function(){
+			this.$window.scroll($.proxy(this.scroll,this));
+		},
+		scroll:function(){
+			this.refreshCollider();
+		},
+		refreshCollider:function(){
+			for (var i = 0; i < this.colliderCollection.length; i++) {
+				this.colliderCollection[i].shake();
+				this.colliderCollection[i].setBody();
+			};
+		},
 		addSnow:function(){
 			if(this.collection.length >= this.opts.maxChildren) return;
 			var snow = new Snow(this.opts.snow);
@@ -255,9 +274,11 @@ window.requestAnimFrame = (function(){
 			this.addToAnimation(snow);
 		},
 		edges:function(){
+			var scroll = this.$window.scrollTop();
 			return {
 				width:this.$window.width(),
 				height:this.$window.height(),
+				scroll: scroll > 0 ? scroll : 0
 			}
 		},
 		start:function(){ 

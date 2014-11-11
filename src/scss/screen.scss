@@ -1,9 +1,8 @@
 body{
-	background-color: blue; 
+	background-color: darkBlue; 
 } 
 
 .snow{
-	position: relative;
 	&:before{
 		content:"";
 		height: 100%;
