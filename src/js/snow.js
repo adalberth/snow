@@ -191,7 +191,7 @@ window.requestAnimFrame = (function(){
 			var top = this.$el.position().top - this.opts.parent.edges().scroll;
 			return {
 		        top: top,
-		        right: this.$el.position().left + this.$el.width(),
+		        right: this.$el.position().left + this.$el.width() - 10,
 		        bottom: top + 1, //this.$el.height(),
 		        left: this.$el.position().left,
 	        };
