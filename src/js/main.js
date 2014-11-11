@@ -10,7 +10,7 @@ window.requestAnimFrame = (function(){
           };
 })();
 
-(function($,p5){
+(function($){
 
 	/*
 	* Prefix
@@ -323,7 +323,7 @@ window.requestAnimFrame = (function(){
 	$(document).ready(function(){
 		var snowStorm = new SnowStorm();	
 	});
-}(jQuery, p5))
+}(jQuery))
 
 
 
